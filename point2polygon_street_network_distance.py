@@ -20,3 +20,13 @@ arcpy.PolygonToLine_management("parks_dissolved", "parksAsLine")
 # merge parks and LION file
 arcpy.Merge_management(["Lion_2013/Lion_2013_base", "parksAsLine"], "parkLION_merge")
 
+# insersect parkLION and parksAsLine
+arcpy.Intersect_analysis(["parkLION_merge", "Lion_2013/Lion_2013_base"], "parkIntersectPoints", "", "", "point")
+
+# select intersection points by location
+# select feature from
+# target layer: parkIntersectPoints
+# source layer: parks_dissolved
+# are within a distance of the source layer feature
+# search radius: 50 ft
+arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", "50 feet", "NEW_SELECTION")
