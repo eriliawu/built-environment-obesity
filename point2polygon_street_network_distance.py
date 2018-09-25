@@ -28,5 +28,10 @@ arcpy.Intersect_analysis(["parkLION_merge", "Lion_2013/Lion_2013_base"], "parkIn
 # target layer: parkIntersectPoints
 # source layer: parks_dissolved
 # are within a distance of the source layer feature
-# search radius: 50 ft
-arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", "50 feet", "NEW_SELECTION")
+# search radius: 30 ft, 45 ft, 60ft
+radius = ["30 feet", "45 feet", "60 feet"]
+for distance in radius:
+    arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", distance, "NEW_SELECTION", "NOT_INVERT")
+    arcpy.FeatureClassToFeatureClass_conversion("parkIntersectPoints", r"H:\Personal\Street_Network.gdb", "parkEntrances_"+distance)
+
+
