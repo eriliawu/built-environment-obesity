@@ -12,7 +12,7 @@ arcpy.CheckOutExtension("Network")
 env.overwriteOutput = True
 
 # set up work environment
-env.workspace = "H:/Personal/Street_Network.gdb"
+env.workspace = "Street_Network.gdb"
 
 # convert parks from polygons to lines
 arcpy.PolygonToLine_management("parks_dissolved", "parksAsLine")
@@ -32,6 +32,6 @@ arcpy.Intersect_analysis(["parkLION_merge", "Lion_2013/Lion_2013_base"], "parkIn
 radius = ["30 feet", "45 feet", "60 feet"]
 for distance in radius:
     select = arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", distance, "NEW_SELECTION", "NOT_INVERT")
-    arcpy.FeatureClassToFeatureClass_conversion(select, r"H:\Personal\Street_Network.gdb", "parkEntrances_"+distance)
+    arcpy.FeatureClassToFeatureClass_conversion(select, r"Street_Network.gdb", "parkEntrances_"+distance)
 
 
