@@ -2,7 +2,7 @@
 Discovering possible association between childhood obesity and children's built environment in the neighborhood around their homes.
 
 ## note
-This is a follow-up project built upon the [Food Environment and Obesity](https://github.com/eriliawu/food-environment-obesity/blob/master/README.md#note) project. After examining the associations between food and weight outcomes, it's only natural to wonder how other elements of the environment could affect children's health and weight. 
+This is a follow-up project built upon the [Food Environment and Obesity](https://github.com/eriliawu/food-environment-obesity/blob/master/README.md#note) project. After examining the associations between food and weight outcomes, it's only natural to wonder how other elements of the environment could affect children's health and weight. For street network distance calculation, I connected the [Anaconda package to Arc10.5](https://gis.stackexchange.com/questions/119503/getting-arcpy-to-work-with-anaconda#119507).
 
 ## conceptual framework and how it works
 Parks are essentially polygons. Like calculating point to point euclidean distance, we can also use `nncross` under `spatstat` package or `gDistance` functions under `rgeos` package to get the shortest distance from a point to the nearest polygon. While `nncross` is faster in finding the shortest distance travelled, `gDistance` is more versatile since it is able to compute distance between each point and every polygon in the data. To further compute street network distance, we use `network analyst` package in ArcGIS.
