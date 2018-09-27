@@ -34,4 +34,22 @@ for distance in radius:
     select = arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", distance, "NEW_SELECTION", "NOT_INVERT")
     arcpy.FeatureClassToFeatureClass_conversion(select, r"Street_Network.gdb", "parkEntrances_"+distance)
 
+# find closest facility
+# load park points as facilities
+# load students as incidents
+# Access the analysis preferences by clicking on the file button next to the drop-down menu the network analyst window 
+# (where you loaded the students and restaurants)
+# Under the Analysis Settings tab, make sure you set Facilities to Find to 1,
+# and Travel from should be Incident to Facility (Radio button)
+# Click Solve in the network analyst toolbar (grid with squiggly line)
+
+streetNetwork = r'H:/Personal/Street_Network.gdb'
+incidents = r'H:/Personal/Street_Network.gdb/s_all' #use unique student x-y of all years
+facilities = r'H:/Personal/Street_Network.gdb/parkEntrances_30ft'
+outGeodatabase = r'H:/Personal/Street_Network.gdb/Lion_2013'
+
+# Run FindClosestFacilities. Choose to find only the closest facility.
+arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, "Routes", 
+                               "Directions", "nearestPark_30ft",
+                               Number_of_Facilities_to_Find=1)
 
