@@ -43,13 +43,16 @@ for distance in radius:
 # and Travel from should be Incident to Facility (Radio button)
 # Click Solve in the network analyst toolbar (grid with squiggly line)
 
+# write a loop to cover 5 years
 streetNetwork = r'H:/Personal/Street_Network.gdb'
-incidents = r'H:/Personal/Street_Network.gdb/s_all' #use unique student x-y of all years
 facilities = r'H:/Personal/Street_Network.gdb/parkEntrances_30ft'
-outGeodatabase = r'H:/Personal/Street_Network.gdb/Lion_2013'
+years = ["09", "10", "11", "12", "13"]
 
-# Run FindClosestFacilities. Choose to find only the closest facility.
-arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, "Routes", 
-                               "Directions", "nearestPark_30ft",
-                               Number_of_Facilities_to_Find=1)
+for t in years:
+    incidents = r'H:/Personal/Street_Network.gdb/s' + t 
+    outGeodatabase = r'H:/Personal/Street_Network.gdb/Lion_20' + t
+    # Run FindClosestFacilities. Choose to find only the closest facility.
+    arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, "Routes", 
+                               "Directions", "nearestPark_30ft" + t, Number_of_Facilities_to_Find=1)
+
 
