@@ -12,7 +12,7 @@ arcpy.CheckOutExtension("Network")
 env.overwriteOutput = True
 
 # set up work environment
-env.workspace = "Street_Network.gdb"
+env.workspace = "H:/Personal/Street_Network.gdb"
 
 # convert parks from polygons to lines
 arcpy.PolygonToLine_management("parks_dissolved", "parksAsLine")
@@ -29,10 +29,15 @@ arcpy.Intersect_analysis(["parkLION_merge", "Lion_2013/Lion_2013_base"], "parkIn
 # source layer: parks_dissolved
 # are within a distance of the source layer feature
 # search radius: 30 ft, 45 ft, 60ft
-radius = ["30 feet", "45 feet", "60 feet"]
-for distance in radius:
-    select = arcpy.SelectLayerByLocation_management("parkIntersectPoints", "WITHIN_A_DISTANCE", "parks_dissolved", distance, "NEW_SELECTION", "NOT_INVERT")
-    arcpy.FeatureClassToFeatureClass_conversion(select, r"Street_Network.gdb", "parkEntrances_"+distance)
+# feature class has to be converted to feature layer, b/c ft class cannot be used in select management
+arcpy.MakeFeatureLayer_management("parkIntersectPoints", "parkIntersectPoints_layer") 
+arcpy.MakeFeatureLayer_management("parks_dissolved", "parks_dissolved_layer")
+
+radius = [30, 45, 60]
+for distance in radius:  
+    select = arcpy.SelectLayerByLocation_management("parkIntersectPoints_layer", "WITHIN_A_DISTANCE", 
+                                                    "parks_dissolved", str(distance)+" feet", "NEW_SELECTION", "NOT_INVERT")
+    arcpy.FeatureClassToFeatureClass_conversion(select, r"H:\Personal\Street_Network.gdb", "parkEntrances_"+str(distance))
 
 # find closest facility
 # load park points as facilities
