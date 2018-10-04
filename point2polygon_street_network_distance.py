@@ -1,8 +1,4 @@
-# references
-# 1] network analyst module
-# https://resources.arcgis.com/en/help/main/10.2/index.html#//004800000028000000
-# 2] connect anaconda and arcpy
-# https://gis.stackexchange.com/questions/119503/getting-arcpy-to-work-with-anaconda#119507
+# compute street network distance between parks and student homes
 
 import arcpy
 from arcpy import env
