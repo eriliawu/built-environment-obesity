@@ -50,4 +50,7 @@ for t in years:
         # Run FindClosestFacilities. Choose to find only the closest facility
         arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, route, 
                                "directions", "closestFacility", Number_of_Facilities_to_Find=1)
+        arcpy.TableToTable_conversion(outGeodatabase+"/"+route,
+                                     r"output_folder",
+                                     route+".csv")
 
