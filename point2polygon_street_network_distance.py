@@ -36,17 +36,21 @@ for r in radius:
     arcpy.FeatureClassToFeatureClass_conversion(select, r"Street_Network.gdb", "parkEntrances_"+str(r))
 
 # find closest facility
+# find closest facility
+# write a loop to cover 5 years
+# inner loop to cover 30, 45 and 60 ft radiuses
+years = ["09", "10", "11", "12", "13"]
+
 for t in years:
     streetNetwork = r'Street_Network.gdb/Lion_20' + t +'/Lion_20' + t + '_Network'
     incidents = r'Street_Network.gdb/s' + t
-    outGeodatabase = r'Street_Network.gdb/Lion_20' + t
+    outGeodatabase = r'Street_Network.gdb'
     for r in radius:
         facilities = r'Street_Network.gdb/parkEntrances_' + str(r)
-        route = "nearestPark_" + str(r) + "_" + t
+        closestFacility = "nearestPark_" + str(r) + "_" + t
         # Run FindClosestFacilities. Choose to find only the closest facility
-        arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, route, 
+        arcpy.na.FindClosestFacilities(incidents, facilities, "Feet", streetNetwork, outGeodatabase, "route", 
                                "directions", "closestFacility", Number_of_Facilities_to_Find=1)
-        arcpy.TableToTable_conversion(outGeodatabase+"/"+route,
+        arcpy.TableToTable_conversion(outGeodatabase + "/" + closestFacility,
                                      r"output_folder",
-                                     route+".csv")
-
+                                     closestFacility + ".csv")
