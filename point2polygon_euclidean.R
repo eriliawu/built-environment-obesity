@@ -1,3 +1,4 @@
+# euclidean distance
 # calculate the nearest distance to a park
 # calculate the number of parks within certain parameters
 
