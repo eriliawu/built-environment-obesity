@@ -24,7 +24,7 @@ arcpy.Intersect_analysis(["parkLION_merge", "Lion_2013/Lion_2013_base"], "parkIn
 # target layer: parkIntersectPoints
 # source layer: parks_dissolved
 # are within a distance of the source layer feature
-# search radius: 30 ft, 45 ft, 60ft
+# search radius: 30 ft, 45 ft, 60 ft
 # feature class has to be converted to feature layer, b/c ft class cannot be used in select management
 arcpy.MakeFeatureLayer_management("parkIntersectPoints", "parkIntersectPoints_layer") 
 arcpy.MakeFeatureLayer_management("parks_dissolved", "parks_dissolved_layer")
