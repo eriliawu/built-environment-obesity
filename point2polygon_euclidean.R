@@ -1,16 +1,16 @@
-# euclidean distance
-# calculate the nearest distance to a park
-# calculate the number of parks within certain parameters
+
+setwd("")
 
 ### load packages ----
 suppressWarnings(library(sp)) #to prep using gDistance
 suppressWarnings(library(spatstat)) #nncross
 suppressWarnings(library(maptools)) #readShapeLines; read shapefiles
 suppressWarnings(library(rgeos)) #gDistance
-suppressWarnings(library(rgdal)) #readOGR
+suppressWarnings(library(rgdal))
+suppressWarnings(library(geosphere))
 
 ### read student data ----
-students <- read.csv("students.csv", stringsAsFactors = FALSE) #clean up the data so it has two columns: x and y
+students <- read.csv("students0.csv", stringsAsFactors = FALSE) #clean up the data so it has two columns: x and y
 
 ### euclidean distance, nearest park ----
 ### use nncross
@@ -20,67 +20,42 @@ coords.students <- ppp(students$x, students$y,
                                    yrange=c(0, max(students$y))))
 
 # read parks
-parks <- readOGR(".", "parks")
+parks <- readOGR("C:/Users/klv248/Downloads/Open Space (Parks) (1)", "geo_export_42d3128f-1214-47cc-864d-0191f081860d")
 parks <- as(parks,"SpatialLines")
 parks <- as.psp(parks)
 
+
 # find nearest park
-dist <- nncross(coords.students, parks, what="dist")
+dist <- nncross(coords.students, parks)
 students <- cbind(students, dist)
 colnames(students)[3] <- "nearest"
-write.csv(students, "dist_to_nearest.csv")
+write.csv(students, "dist_to_nearest0.csv")
+
+
+#get coordinates for nearest park boundary by student
+coords.parks <-xy.coords(parks, x)
+which.parks<- nnwhich(coords.students,parks)
+which.students<- cbind(students,which.parks)
+write.csv(coords.parks,"park coordinates.csv")
 
 ### count the num of parks ----
-park.info <- read.csv("list_of_parks.csv", stringsAsFactors = FALSE) #provides unique park ids (var: parknum) and the type of park (var: landuse)
+park.info <- read.csv("parks_with_landuse.csv", stringsAsFactors = FALSE) #provides unique park ids (var: parknum) and the type of park (var: landuse)
 names(park.info) #clean up so that park.info has 2 vars: parknum and landuse
 
-parks <- readOGR(".", "parks")
+parks <- readOGR(".","parks_with_landuse") #gDistance reads polygons as SpatialPolygons feture class
 
 #create functions to count numbr of parks within different parameters
 # buffers: 40, 264, 660, 1320, 2640 ft
 # these buffers roughly represent the width of a street, one city block, 1/8 of a mile, a quarter of a mile and half a mile
 # how wide should a street be: 
-# http://plannersweb.com/2013/09/wide-neighborhood-street-part-1/
-sum40 <- function(x) { #park is right across the street
-  num <- sum(x<40)
-  return(num)
-}
+mdesc
 
-sum264 <- function(x) { #1 city block
-  num <- sum(x<264)
-  return(num)
-}
-
-sum660 <- function(x) { #1/8 of a mile
-  num <- sum(x<660)
-  return(num)
-}
-
-sum1320 <- function(x) { #1 quarter of a mile
-  num <- sum(x<1320)
-  return(num)
-}
-
-sum2640 <- function(x) { #half a mile
-  num <- sum(x<2640)
-  return(num)
-}
-
-memory.limit(size=56000)
-
-# slice students into smaller groups to calculate student to park distance
-coords.students <- SpatialPoints(students)
-dist <- gDistance(parks, coords.students,byid=TRUE)
-dist <- as.data.frame(dist)
-row <- dim(dist)[1]
-col <- dim(dist)[2]
-colnames(dist)[1:col] <- park.info$parknum
 # export raw results first for archive
-write.csv(dist, "raw_output.csv")
+write.csv(dist, "raw_output0.csv")
 
 # find nearest park by landuse
 group <- data.frame(t(dist))
-group$landuse <- park.info$landuse
+group$landuse <- parks$landuse
 group <- aggregate(group, by=list(group$landuse), min)
 group$Group.1 <- NULL
 group <- data.frame(t(group))
@@ -97,5 +72,5 @@ dist$n1320 <- apply(dist[, 1:col], 1, sum1320)
 dist$n2640 <- apply(dist[, 1:col], 1, sum2640)
 
 dist <- dist[, -c(1:col)]
-dist.all <- cbind(students, dist.all)
-write.csv(dist.all, "nearest_count_park.csv")
+dist.all <- cbind(students, dist)
+write.csv(dist.all, "nearest_count_park0.csv")
